@@ -1,0 +1,26 @@
+---
+- name: PokeAPI lookup script
+  hosts: localhost
+
+
+  vars: 
+    pokemon: ["pikachu","Piplup","Blacephalon"]
+    url: "https://pokeapi.co/api/v2/pokemon/"
+
+  tasks:
+
+  - name: make URI request
+    uri:
+      url: "{{ url }}{{ item | lower }}"
+      method: GET
+    register: results
+    loop:
+      "{{ pokemon }}"
+
+  - name: Print out return
+    debug:
+      msg:
+        - "Pokemon: {{ item.item }}"
+        - "Stats: {{ item.json.stats }}"
+          #        - "Names:"
+      loop: "{{ results.results }}"
