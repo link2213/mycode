@@ -1,0 +1,34 @@
+---
+- name: Wednesday Challenge
+  hosts: planetexpress
+  become: true
+
+  vars:
+    - pacakge_list: [figlet, sl]
+
+  vars_files:
+    - /home/student/mycode/vars/wed_challenge_names.yml
+
+  tasks:
+    - name: Creating groups
+      ansible.builtin.group:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ wednesday }}"
+
+    - name: Creating Users
+      ansible.builtin.user:
+        name: "{{ item }}"
+        group: "{{ item }}"
+        state: present
+      loop: "{{ wednesday }}"
+
+    - name: Installing packages
+      ansible.builtin.package:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ pacakge_list }}"
+
+    - name: Output message
+      ansible.builtin.debug:
+        msg: "I've completed the challenge!"
