@@ -1,0 +1,31 @@
+---
+- name: "Wednesday Challenege 2"
+  hosts: planetexpress:!farnsworth
+  gather_facts: yes
+  become: true
+
+  vars_prompt:
+    - name: "directory_name"
+      prompt: "Enter a new directory name"
+      confirm: true
+      default: "new_default"
+      private: no
+
+  tasks:
+    - name: Task 1
+      ansible.builtin.file:
+        mode: 0777
+        path: "/home/date_info/{{ directory_name }}"
+        state: directory
+
+    - name: Task 2
+      ansible.builtin.shell:
+        "date > /home/date_info/{{ directory_name }}/today.txt"
+
+    - name: Task 3
+      ansible.builtin.command: "cat /home/date_info/{{ directory_name }}/today.txt"
+      register: cat_out
+
+    - name: Print out cat
+      ansible.builtin.debug:
+        msg: "{{ cat_out.stdout }}"
